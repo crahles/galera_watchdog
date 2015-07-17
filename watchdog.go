@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	DB  *sql.DB
+	db  *sql.DB
 	err error
 
 	httpHost = flag.String("HTTP_HOST", "localhost", "Connect to host")
@@ -27,28 +27,36 @@ var (
 
 	showVersion = flag.Bool("version", false, fmt.Sprint("Show current version: ", Commit))
 
+	// Commit holds the git sha information on compile time
 	Commit = "dev"
 )
 
 func main() {
 	iniflags.Parse()
 	if *showVersion {
-	  fmt.Println(Commit)
-	  return
+		fmt.Println(Commit)
+		return
 	}
-	DB, err = sql.Open(
+	db, err = sql.Open(
 		"mysql",
 		fmt.Sprintf("%s:%s@tcp(%s:%s)/mysql", *sqlUser, *sqlPass, *sqlHost, *sqlPort),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.HandleFunc("/", statusHandler)
-	http.ListenAndServe(*httpHost+":"+*httpPort, nil)
+	http.HandleFunc("/", databaseStatusHandler)
+	http.HandleFunc("/status", watchdogStatusHandler)
+	if err := http.ListenAndServe(*httpHost+":"+*httpPort, nil); err != nil {
+		log.Fatal(err)
+	}
 }
 
-func statusHandler(w http.ResponseWriter, r *http.Request) {
-	err = DB.Ping()
+func watchdogStatusHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
+func databaseStatusHandler(w http.ResponseWriter, r *http.Request) {
+	err = db.Ping()
 	if err != nil {
 		http.Error(w, "Galera Node is *down*. ("+err.Error()+")", 503)
 		return
@@ -56,7 +64,7 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 
 	var key string
 	var value int64
-	err = DB.QueryRow("SHOW STATUS LIKE 'wsrep_local_state'").Scan(&key, &value)
+	err = db.QueryRow("SHOW STATUS LIKE 'wsrep_local_state'").Scan(&key, &value)
 	if err != nil {
 		http.Error(w, "Galera Node is *down*. ("+err.Error()+")", 503)
 		return
