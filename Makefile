@@ -2,7 +2,7 @@ COMMIT = $(shell git rev-parse --short HEAD)
 BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 
 all:
-	go build -ldflags "-X main.Commit $(BRANCH)-$(COMMIT)" 
+	go build -ldflags "-X main.Commit=$(BRANCH)-$(COMMIT)"
 
 deb_package: all
 	rm -f galera*watchdog*.deb
