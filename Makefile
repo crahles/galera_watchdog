@@ -11,11 +11,5 @@ deb_package: all
 	fpm --prefix=/usr --url https://github.com/crahles/galera_watchdog -s dir -t deb -n galera_watchdog -m'christoph@rahles.de' -v $(BRANCH)-$(COMMIT) bin/galera_watchdog
 	rm -rf bin/
 
-install: all
-	sudo mv galera_watchdog /usr/bin/
-
-uninstall:
-	sudo rm /usr/bin/galera_watchdog
-
 clean:
 	rm -f galera_watchdog galera*watchdog*.deb
