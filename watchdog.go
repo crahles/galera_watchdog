@@ -15,12 +15,12 @@ var (
 	db  *sql.DB
 	err error
 
-	httpHost = flag.String("HTTP_HOST", "localhost", "Connect to host")
-	httpPort = flag.String("HTTP_PORT", "9199", "Connect to host")
+	httpHost = flag.String("HTTP_HOST", "localhost", "http address")
+	httpPort = flag.String("HTTP_PORT", "9199", "http port")
 
-	sqlHost = flag.String("MYSQL_HOST", "localhost", "Connect to host")
-	sqlPort = flag.String("MYSQL_PORT", "3306", "Connect to host")
-	sqlUser = flag.String("MYSQL_USER", "root", "User for login to MySQL")
+	sqlHost = flag.String("MYSQL_HOST", "localhost", "address of the MySQL server")
+	sqlPort = flag.String("MYSQL_PORT", "3306", "port of the MySQL server")
+	sqlUser = flag.String("MYSQL_USER", "root", "Username for login to MySQL")
 	sqlPass = flag.String("MYSQL_PASS", "", "Password for login to MySQL")
 
 	donorOk = flag.Bool("DONOR_OK", false, "treat donor as regular working node")
