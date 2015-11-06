@@ -9,9 +9,13 @@ build:
 	go build -ldflags "-X main.Commit=$(BRANCH)-$(COMMIT)"
 
 deb: clean build
-	mkdir bin
-	cp galera_watchdog bin/
-	fpm --prefix=/usr --url https://github.com/crahles/galera_watchdog -s dir -t deb -n galera_watchdog -m'christoph@rahles.de' -v $(BRANCH)-$(COMMIT) bin/galera_watchdog
+	cp galera_watchdog build/opt/bin/
+	fpm --url https://github.com/crahles/galera_watchdog \
+	-s dir -t deb -n galera_watchdog -m'christoph@rahles.de' \
+	--after-install=build/install.sh \
+	-v 1.0.3 --iteration $(COMMIT) ./build/opt/bin/galera_watchdog=/opt/bin/ \
+	./build/etc/galera_watchdog/galera_watchdog=/etc/galera_watchdog/ \
+	./build/lib/systemd/system/galera_watchdog.service=/lib/systemd/system/
 
 clean:
-	rm -rf galera_watchdog galera*watchdog*.deb bin
+	rm -rf galera_watchdog galera*watchdog*.deb build/opt/bin/*

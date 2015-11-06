@@ -1,0 +1,10 @@
+[Unit]
+Description=Galera Node Watchdog
+
+[Service]
+User=galera_watchdog
+Group=galera_watchdog
+ExecStart=/opt/bin/galera_watchdog -config /etc/galera_watchdog/galera_watchdog
+
+[Install]
+WantedBy=multi-user.target

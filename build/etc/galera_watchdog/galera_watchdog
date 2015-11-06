@@ -1,0 +1,14 @@
+### web facing interface ###
+HTTP_HOST = localhost # http address
+HTTP_PORT = 9199 # http port
+
+### cluster facing interface ###
+MYSQL_HOST = localhost  # address of the MySQL server
+MYSQL_PORT = 3306  # port of the MySQL server
+MYSQL_USER = root  # Username for login to MySQL
+MYSQL_PASS =   # Password for login to MySQL
+DONOR_OK = false  # treat donor as regular working node
+
+# Update interval for re-reading config file set via -config flag.
+# Zero disables config file re-reading.
+configUpdateInterval = 0
